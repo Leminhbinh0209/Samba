@@ -1,0 +1,5 @@
+data_folder: "./data/"
+dataset: "USCS"
+method: "LR"
+random_seed: 41
+batch_size: 512

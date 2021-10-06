@@ -1,0 +1,37 @@
+data_folder: "./data/"
+dataset: "USCS"
+method: "LR"
+random_seed: 41
+input_dim: 2160
+
+RANDOM_ID: 1 # FIXME: RANDOM ID to find the stored model easily on the server
+k_fold: 5 # Number of Folds to apply when doing Cross Validation
+apply_oversampling: False
+
+NB_CLASSES: 2 # the number of classes for our problem TODO: CHANGE THE NUMBER OF CLASSES HERE
+NB_EPOCHS: 50 # the number of epoch that the training of the model should run
+BATCH_SIZE: 64 # the number of inputs that should be added each loop of each epoch
+validation_split: 0.2 # Fraction (percentage) of the training data to be used as validation data.
+shuffle_training_set: True # whether to shuffle the training set after each epoch
+
+# load_to_memory : True  # pre-load the features into memory
+other_features_type: "all" # whether to use only statistics or all other features as input to the statics branch of the model. ('statistics' or 'all')
+dropout_level: 0.5 # the standard dropout level is 0.5
+reccurent_dropout_level: 0.5 # the dropout level for each layer of LSTMs
+text_input_dropout_level: 0.0 # the dropout level to be applied in the Input of LSTMs that process text inputs
+final_dropout_level: 0.5 # the dropout level of the last layer before the softmax layer
+include_final_dropout_layer: True # whether to include the final dropout layer before the softmax layer
+dimensionality_reduction_layers: True # whether to include or not the dimensionality reduction layers
+
+early_stopping_patience: 10 # number of epochs to check if the model has been improved otherwise terminate training
+
+# Best Adam Optimization Params in Keras (lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+optimizer_type: "adam" # one of: adam, sgd, RMSprop
+learning_rate: 1e-3 # Usually between: 1e-3 (0.001) ... 1e-5 (0.00001)
+epsilon: 1e-4 # None, 1e-4...1e-8 | when training an Inception Network ideal values are 1.0 and 0.1 (default=1e-8)
+adam_beta_1: 0.9
+adam_beta_2: 0.999
+decay: 0.0 # learning rate decay
+
+# Set other model parameters
+loss_function: "categorical_crossentropy" #'categorical_crossentropy' # 'categorical_crossentropy' or 'mean_squared_error'

@@ -1,0 +1,3 @@
+data_folder: "./data"
+dataset: "USCS"
+random_state: 41

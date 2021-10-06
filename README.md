@@ -8,12 +8,12 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 ./data
   |--USCS_data
   |        |---meta_data
-  |        |---transcript
+  |        |---transcripts
   |
   |
   |--CURVE_data
           |---meta_data
-          |---transcript
+          |---transcripts
 
 
 ```

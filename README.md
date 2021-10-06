@@ -1,4 +1,4 @@
-# Youtube Kid-Video Detection
+# Youtube Video Detection
 
 ## 1. Dataset
 
@@ -17,7 +17,7 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 
 
 ```
-
+For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcript` folder.
 ## 2. Pre-process data
 
 #### 2.1 Generate K-Fold split
@@ -76,7 +76,7 @@ $ python subtitle_word2vec_train.py
 
 #### 3.3 Average ensemble
 
-Change ensemble methods at **line 30**
+Change ensemble methods at **line 30** of `average_ensemble.py` and run
 
 ```
 $ python average_ensemble.py

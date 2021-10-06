@@ -50,33 +50,33 @@ def main(config):
     uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
     uscs_big_meta = pd.read_csv(uscs_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
     print(uscs_big_meta.shape)
-    # print("Modify the input Subtitle CSV file  so that we have a subtitle dataframe")
-    # subtitle_file = uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv"
+    print("Modify the input Subtitle CSV file  so that we have a subtitle dataframe")
+    subtitle_file = uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv"
 
-    # uscs_big_subtitle = pd.read_csv(subtitle_file,  index_col='video_id', lineterminator='\n').reset_index()
-    # assert 'video_id' in uscs_big_subtitle.columns, f"video_id has to be a column in {subtitle_file}"
-    # assert 'subtitle' in uscs_big_subtitle.columns, f"subtitle has to be a column {subtitle_file}"
+    uscs_big_subtitle = pd.read_csv(subtitle_file,  index_col='video_id', lineterminator='\n').reset_index()
+    assert 'video_id' in uscs_big_subtitle.columns, f"video_id has to be a column in {subtitle_file}"
+    assert 'subtitle' in uscs_big_subtitle.columns, f"subtitle has to be a column {subtitle_file}"
 
-    # uscs_big_subtitle = uscs_big_subtitle[uscs_big_subtitle.video_id.isin(uscs_big_meta.video_id.unique())]
-    # assert len(uscs_big_subtitle.video_id.unique()) == len(uscs_big_meta.video_id.unique()) , "Meta data and subtitle is NOT align in the number training..."
+    uscs_big_subtitle = uscs_big_subtitle[uscs_big_subtitle.video_id.isin(uscs_big_meta.video_id.unique())]
+    assert len(uscs_big_subtitle.video_id.unique()) == len(uscs_big_meta.video_id.unique()) , "Meta data and subtitle is NOT align in the number training..."
 
-    # ### Appending the subtitle splitted
-    # subtile_set = []
+    ### Appending the subtitle splitted
+    subtile_set = []
     
-    # pbar = tqdm(total=len(uscs_big_meta.video_id.unique()))
-    # for video_id in uscs_big_meta.video_id.unique():
-    #     subtile = ' '.join(uscs_big_subtitle[uscs_big_subtitle.video_id==video_id].subtitle)
-    #     subtile_set.append(subtile)
-    #     pbar.update(1)
-    # pbar.close()
+    pbar = tqdm(total=len(uscs_big_meta.video_id.unique()))
+    for video_id in uscs_big_meta.video_id.unique():
+        subtile = ' '.join(uscs_big_subtitle[uscs_big_subtitle.video_id==video_id].subtitle)
+        subtile_set.append(subtile)
+        pbar.update(1)
+    pbar.close()
 
-    # uscs_big_subtitle = pd.DataFrame({"video_id":uscs_big_meta.video_id.unique(),
-    #                              "subtitle": subtile_set,
-    #                              "label": uscs_big_meta.onehot_label})
-    # # Tokenize the subtitle
-    # uscs_big_subtitle["Tokens"] = uscs_big_subtitle.apply(lambda uscs_big_subtitle :tokenizer_twitter_morphs(uscs_big_subtitle['subtitle']), axis=1)
-    # # Save the files
-    # uscs_big_subtitle.to_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
+    uscs_big_subtitle = pd.DataFrame({"video_id":uscs_big_meta.video_id.unique(),
+                                 "subtitle": subtile_set,
+                                 "label": uscs_big_meta.onehot_label})
+    # Tokenize the subtitle
+    uscs_big_subtitle["Tokens"] = uscs_big_subtitle.apply(lambda uscs_big_subtitle :tokenizer_twitter_morphs(uscs_big_subtitle['subtitle']), axis=1)
+    # Save the files
+    uscs_big_subtitle.to_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
     uscs_big_subtitle = pd.read_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv", index_col='video_id', lineterminator='\n').reset_index()
     print(uscs_big_subtitle.shape)
     # define hyper-parameters

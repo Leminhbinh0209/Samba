@@ -9,12 +9,12 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
   |--USCS_data
   |        |---meta_data
   |        |---transcript
-  |        |---word2vec
+  |
   |
   |--CURVE_data
           |---meta_data
           |---transcript
-          |---word2vec
+
 
 ```
 

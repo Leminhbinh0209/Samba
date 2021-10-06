@@ -1,4 +1,7 @@
 ./data/USCS_data/meta_data/thumbnail/
 ./data/USCS_data/meta_data/thumbnail_emb/
+*.npy
+*.png
+*.pyc
 .ipynb_checkpoints
 checkpoints

@@ -1,4 +1,4 @@
-# Youtube Kid-Video Detection
+# Youtube Video Detection
 
 ## 1. Dataset
 
@@ -76,7 +76,7 @@ $ python subtitle_word2vec_train.py
 
 #### 3.3 Average ensemble
 
-Change ensemble methods at **line 30**
+Change ensemble methods at **line 30** of `average_ensemble.py` and run
 
 ```
 $ python average_ensemble.py

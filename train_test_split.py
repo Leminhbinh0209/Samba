@@ -1,4 +1,5 @@
 import sys
+import os
 import pandas as pd
 import pickle
 from easydict import EasyDict as edict
@@ -10,7 +11,7 @@ from sklearn.model_selection import train_test_split
 def main(config):
     uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
     uscs_big_meta = pd.read_csv(uscs_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
-
+    print("Total data sample {}".format(uscs_big_meta.shape[0]))
     print("Start split dataset")
     channel_id_all = uscs_big_meta.channel_id.unique()
     while True:
@@ -32,25 +33,27 @@ def main(config):
         
         print("Train positive ratio: {:.4f}".format(train_ratio))
         print("Test positive ratio: {:.4f}".format(test_ratio))
-        if not np.abs(train_ratio-test_ratio) < 0.05:
+        if not np.abs(train_ratio-test_ratio) < 0.02:
             continue
         else:
             break
-        
+    print("Num training {} - Testing {}".format(len(train_df), len(test_df)))
     print("Save training/test video index")
-    textfile = open(f"{uscs_dir}train_videos.txt", "w")
+    os.remove(f"{uscs_dir}{config.dataset.lower()}_train_videos.txt")
+    textfile = open(f"{uscs_dir}{config.dataset.lower()}_train_videos.txt", "w")
     for element in train_df.video_id:
         textfile.write(element + "\n")
     textfile.close()
-    textfile = open(f"{uscs_dir}test_videos.txt", "w")
+    os.remove(f"{uscs_dir}{config.dataset.lower()}_test_videos.txt")
+    textfile = open(f"{uscs_dir}{config.dataset.lower()}_test_videos.txt", "w")
     for element in test_df.video_id:
         textfile.write(element + "\n")
     textfile.close()
 
 if __name__ == "__main__":
     print("This process will re-generate train and test set.\nPLEASE MAKE SURE YOU WANT TO CHANGE BY REMOVING sys.exit()")
-    # sys.exit()
-    with open('./config/config_pre.yaml', 'r') as stream:
-        config = yaml.safe_load(stream)
-    config = edict(config)
-    main(config)
+    sys.exit()
+    # with open('./config/config_pre.yaml', 'r') as stream:
+    #     config = yaml.safe_load(stream)
+    # config = edict(config)
+    # main(config)

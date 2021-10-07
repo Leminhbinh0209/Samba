@@ -18,7 +18,7 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 
 ```
 
-For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcript` folder.
+For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
 
 ## 2. Pre-process data
 
@@ -32,7 +32,7 @@ $ python kfold_split.py
 
 #### 2.2 Download thumbnail photos
 
-Download thumbnail and embed the thumbnail using InceptionNet
+Download embed the thumbnail images using InceptionNet
 
 ```
 $ python thumbnail_download.py
@@ -46,7 +46,7 @@ Embed all the features: headline, tags, style, thumbnail by running:
 $ python meta_embedding.py
 ```
 
-#### 2.4 Create subtitle CVS file
+#### 2.4 Embed subtitles
 
 _Note: This process may take time since the pre-trained word2vec model used to embedding subtitle._
 

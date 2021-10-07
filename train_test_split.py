@@ -38,6 +38,7 @@ def main(config):
         else:
             break
     print("Num training {} - Testing {}".format(len(train_df), len(test_df)))
+    print("Num training channel {} - Testing channel {}".format(len(train_df.channel_id.unique()), len(test_df.channel_id.unique())))
     print("Save training/test video index")
     os.remove(f"{uscs_dir}{config.dataset.lower()}_train_videos.txt")
     textfile = open(f"{uscs_dir}{config.dataset.lower()}_train_videos.txt", "w")

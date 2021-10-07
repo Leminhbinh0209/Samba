@@ -3,5 +3,7 @@
 *.npy
 *.png
 *.pyc
-.ipynb_checkpoints
+*.ipynb_checkpoints
+*.ipynb
+*.csv
 checkpoints

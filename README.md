@@ -32,7 +32,7 @@ $ python kfold_split.py
 
 #### 2.2 Download thumbnail photos
 
-Download embed the thumbnail images using InceptionNet
+Download and embed the thumbnail images using InceptionNet
 
 ```
 $ python thumbnail_download.py

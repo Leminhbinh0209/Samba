@@ -22,12 +22,12 @@ For the USC dataset, download the meta data csv file [here](https://drive.google
 
 ## 2. Pre-process data
 
-#### 2.1 Generate K-Fold split
+#### 2.1 Generate train-test split
 
 Modify dataset name (i.e., USCS or CURVE) in config file `./config/config_pre.yaml`, then run:
 
 ```
-$ python kfold_split.py
+$ python train_test_split.py
 ```
 
 #### 2.2 Download thumbnail photos
@@ -44,6 +44,13 @@ Embed all the features: headline, tags, style, thumbnail by running:
 
 ```
 $ python meta_embedding.py
+```
+
+Embedding data is exported to `meta_embedding.hdf5` that ahve structure:
+
+```
+  'video_id_1': {'x': x, 'y':y},
+  'video_id_2': {'x': x, 'y':y}
 ```
 
 #### 2.4 Embed subtitles

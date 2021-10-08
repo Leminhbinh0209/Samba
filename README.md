@@ -18,7 +18,8 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 
 ```
 
-For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
+- For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
+- For the CURVE dataset, download the meta data csv file [here](https://drive.google.com/drive/u/1/folders/1A-6fbxJTOOTBnUmgxQ3qhMiDj4rysLsu), and the subttle [here](https://drive.google.com/drive/u/1/folders/19FmlSkpgy30t_3jAxpTk5vzgM9z0d9IG).
 
 ## 2. Pre-process data
 
@@ -50,7 +51,8 @@ Embedding data is exported to `meta_embedding.hdf5` that ahve structure:
 
 ```
   'video_id_1': {'x': x, 'y':y},
-  'video_id_2': {'x': x, 'y':y}
+  'video_id_2': {'x': x, 'y':y},
+  ...
 ```
 
 #### 2.4 Embed subtitles

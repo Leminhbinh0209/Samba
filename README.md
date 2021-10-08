@@ -18,12 +18,12 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 
 ```
 
-- For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
+- For the USCS dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
 - For the CURVE dataset, download the meta data csv file [here](https://drive.google.com/drive/u/1/folders/1A-6fbxJTOOTBnUmgxQ3qhMiDj4rysLsu), and the subtitle [here](https://drive.google.com/drive/u/1/folders/19FmlSkpgy30t_3jAxpTk5vzgM9z0d9IG).
 
-## 2. Pre-process data
+## 2. Data pre-processing
 
-#### 2.1 Generate train-test split
+#### 2.1 Train-test split
 
 **Dev Stage**: Please use pre-splited data can be downloaded directly [here](https://drive.google.com/drive/u/1/folders/1DxemCy87tvfS2C_NUdWV-OA3zAwGd948) and [here](https://drive.google.com/drive/u/1/folders/1pRgR6hMH2Z_ccOPuWDBNc0eyu05Je5mP).
 
@@ -41,7 +41,7 @@ Download and embed the thumbnail images using InceptionNet
 $ python thumbnail_download.py
 ```
 
-#### 2.3 Embeb meta features
+#### 2.3 Meta feature embedding
 
 Embed all the features: headline, tags, style, thumbnail by running:
 
@@ -49,7 +49,7 @@ Embed all the features: headline, tags, style, thumbnail by running:
 $ python meta_embedding.py
 ```
 
-Embedding data is exported to `meta_embedding.hdf5` that ahve structure:
+Embedding data is exported to `meta_embedding.hdf5` that have structure:
 
 ```
   'video_id_1': {'x': x, 'y':y},
@@ -57,7 +57,7 @@ Embedding data is exported to `meta_embedding.hdf5` that ahve structure:
   ...
 ```
 
-#### 2.4 Embed subtitles
+#### 2.4 Word2vec subtitle embedding
 
 _Note: This process may take time since the pre-trained word2vec model used to embedding subtitle._
 

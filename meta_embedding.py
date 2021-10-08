@@ -4,11 +4,12 @@ import json
 import numpy as np
 from tqdm import tqdm
 from meta_helper.utils import *
+from meta_helper.h5py_func import save_dict
 from tensorflow.keras.preprocessing.text import  text_to_word_sequence
 from easydict import EasyDict as edict
 import yaml
 import h5py
-from meta_helper.h5py_func import save_dict
+
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '0' 
 
@@ -55,6 +56,7 @@ def main(config):
         Seconnd round for statistic
     '''
     X_emb_data =  []
+    data_dict = {}
     CNN_feature_extractor_model = CNN_MODEL()
     for index, video_information in tqdm(uscs_big_meta.iterrows()):
         X_general_style_features_in = get_video_general_style_features(video_information)
@@ -78,19 +80,15 @@ def main(config):
             with open(thumb_emb_dir + video_information.video_id + '.npy', 'wb') as f:
                 np.save(f, thumbnail_features)
     
-        f1 = thumbnail_features
-        f2 = X_headline_features_in[0]
-        f3 = X_general_style_features_in[0]
-        f4 = X_video_tags_features_in[0]
-        X_emb_data.append(np.hstack([f1,f2, f3, f4]))
+        data_dict[video_information.video_id] = {
+            'thumbnail': thumbnail_features,
+            'headline': X_headline_features_in[0],
+            'style': X_general_style_features_in[0],
+            'tags': X_video_tags_features_in[0],
+            'y': video_information.onehot_label
+        }
+        
 
-    # np.save(emb_folder + "x_embedding.npy", X_emb_data)
-    # np.save(emb_folder + "y_true.npy", uscs_big_meta.onehot_label.values)
-    # Create empty data dictionary 
-    data_dict = { }
-    for vid, x, y in zip(uscs_big_meta.video_id.values, X_emb_data, uscs_big_meta.onehot_label.values):
-        data_dict[vid] = {'x': x, 'y': y}
-    # Open HDF5 file and write in the data_dict structure and info
     save_dict(data_dict, emb_folder + 'meta_embedding.hdf5')
     
 

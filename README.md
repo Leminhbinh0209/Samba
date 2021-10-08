@@ -19,19 +19,19 @@ We use `*big_meta.csv` file as a standard and split data. The dataset folder is 
 ```
 
 - For the USC dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
-- For the CURVE dataset, download the meta data csv file [here](https://drive.google.com/drive/u/1/folders/1A-6fbxJTOOTBnUmgxQ3qhMiDj4rysLsu), and the subttle [here](https://drive.google.com/drive/u/1/folders/19FmlSkpgy30t_3jAxpTk5vzgM9z0d9IG).
+- For the CURVE dataset, download the meta data csv file [here](https://drive.google.com/drive/u/1/folders/1A-6fbxJTOOTBnUmgxQ3qhMiDj4rysLsu), and the subtitle [here](https://drive.google.com/drive/u/1/folders/19FmlSkpgy30t_3jAxpTk5vzgM9z0d9IG).
 
 ## 2. Pre-process data
 
 #### 2.1 Generate train-test split
+
+**Dev Stage**: Please use pre-splited data can be downloaded directly [here](https://drive.google.com/drive/u/1/folders/1DxemCy87tvfS2C_NUdWV-OA3zAwGd948) and [here](https://drive.google.com/drive/u/1/folders/1pRgR6hMH2Z_ccOPuWDBNc0eyu05Je5mP).
 
 Modify dataset name (i.e., USCS or CURVE) in config file `./config/config_pre.yaml`, then run:
 
 ```
 $ python train_test_split.py
 ```
-
-**Dev Stage**: Please use pre-splited data can be downloaded directly [here](https://drive.google.com/drive/u/1/folders/1DxemCy87tvfS2C_NUdWV-OA3zAwGd948) and [here](https://drive.google.com/drive/u/1/folders/1pRgR6hMH2Z_ccOPuWDBNc0eyu05Je5mP).
 
 #### 2.2 Download thumbnail photos
 

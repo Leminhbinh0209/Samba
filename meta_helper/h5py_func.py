@@ -22,16 +22,23 @@ def read_dict(filename, intance_keys):
                 intance_keys[1]: data,
                 ...}
         ...}
+    output:
+        data-frame style dictionary
     """
-    data_dict = dict()
+    # Create an empty datadiction 
+    data_dict = dict({'video_id': []})
+    for k in intance_keys:
+        data_dict[k] = []
+
     f = h5py.File(filename, 'r')
     list_keys = f.keys()
     for grp_name in tqdm(list_keys):
-        data_dict[grp_name] = dict()
+        # data_dict[grp_name] = dict()
+        data_dict['video_id'].append(grp_name)
         for dset_name in intance_keys:
             if dset_name != 'y':
-                data_dict[grp_name][dset_name] = f[grp_name][dset_name][:]
+                data_dict[dset_name].append(f[grp_name][dset_name][:]) 
             else:
-                data_dict[grp_name][dset_name] = f[grp_name][dset_name][()]
+                data_dict[dset_name].append(f[grp_name][dset_name][()])
     f.close()
     return data_dict

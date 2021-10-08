@@ -31,6 +31,8 @@ Modify dataset name (i.e., USCS or CURVE) in config file `./config/config_pre.ya
 $ python train_test_split.py
 ```
 
+**Dev Stage**: Please use pre-splited data can be downloaded directly [here](https://drive.google.com/drive/u/1/folders/1DxemCy87tvfS2C_NUdWV-OA3zAwGd948) and [here](https://drive.google.com/drive/u/1/folders/1pRgR6hMH2Z_ccOPuWDBNc0eyu05Je5mP).
+
 #### 2.2 Download thumbnail photos
 
 Download and embed the thumbnail images using InceptionNet

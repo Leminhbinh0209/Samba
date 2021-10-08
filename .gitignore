@@ -6,4 +6,5 @@
 *.ipynb_checkpoints
 *.ipynb
 *.csv
+*.hdf5
 checkpoints

@@ -55,8 +55,8 @@ def main(config):
     '''
         Seconnd round for statistic
     '''
-    X_emb_data =  []
-    data_dict = {}
+    
+    data_dict = edict({'video_id':[], 'thumbnail':[], 'headline':[], 'style':[], 'tags':[], 'y':[]})
     CNN_feature_extractor_model = CNN_MODEL()
     for index, video_information in tqdm(uscs_big_meta.iterrows()):
         X_general_style_features_in = get_video_general_style_features(video_information)
@@ -79,14 +79,14 @@ def main(config):
             thumbnail_features = CNN_feature_extractor_model.extract_features_image(frame_image_path=img_dir + video_information.video_id + '.png')
             with open(thumb_emb_dir + video_information.video_id + '.npy', 'wb') as f:
                 np.save(f, thumbnail_features)
+
+        data_dict.video_id.append(video_information.video_id)
+        data_dict.thumbnail.append(thumbnail_features)
+        data_dict.headline.append(X_headline_features_in[0])
+        data_dict.style.append(X_general_style_features_in[0])
+        data_dict.tags.append(X_video_tags_features_in[0])
+        data_dict.y.append(video_information.onehot_label)
     
-        data_dict[video_information.video_id] = {
-            'thumbnail': thumbnail_features,
-            'headline': X_headline_features_in[0],
-            'style': X_general_style_features_in[0],
-            'tags': X_video_tags_features_in[0],
-            'y': video_information.onehot_label
-        }
         
 
     save_dict(data_dict, emb_folder + 'meta_embedding.hdf5')

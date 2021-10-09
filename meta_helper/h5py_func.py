@@ -6,14 +6,13 @@ def save_dict(data_dict, filename):
     Implemetation of Two-level dictionary wrting
     """
     f = h5py.File(filename, 'w')
-    for grp_name in data_dict:
-        grp = f.create_group(grp_name)
-        for dset_name in data_dict[grp_name]:
-            dset = grp.create_dataset(dset_name, data = data_dict[grp_name][dset_name])
+    grp = f.create_group('data')
+    for dset_name in data_dict.keys():
+        dset = grp.create_dataset(dset_name, data = data_dict[dset_name])
     f.close()
     print(f"Successfully saved to {filename}")
 
-def read_dict(filename, intance_keys):
+def read_dict(filename):
     """
     Two-level dictionary reading from h5py 
         {
@@ -26,19 +25,10 @@ def read_dict(filename, intance_keys):
         data-frame style dictionary
     """
     # Create an empty datadiction 
-    data_dict = dict({'video_id': []})
-    for k in intance_keys:
-        data_dict[k] = []
-
+    data_dict = dict()
     f = h5py.File(filename, 'r')
-    list_keys = f.keys()
-    for grp_name in tqdm(list_keys):
-        # data_dict[grp_name] = dict()
-        data_dict['video_id'].append(grp_name)
-        for dset_name in intance_keys:
-            if dset_name != 'y':
-                data_dict[dset_name].append(f[grp_name][dset_name][:]) 
-            else:
-                data_dict[dset_name].append(f[grp_name][dset_name][()])
+    list_keys = f['data'].keys()
+    for grp_name in list_keys:
+        data_dict[grp_name] = f['data'][grp_name][:]
     f.close()
     return data_dict

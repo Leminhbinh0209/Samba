@@ -52,11 +52,12 @@ $ python meta_embedding.py
 Embedding data is exported to `meta_embedding.hdf5` that have structure:
 
 ```
-  'video_id_1': {'thumbnail': array,
-                'headline': array,
-                'style': array,
-                'tags':array ,
-                'y': 0/1}
+  {video_id: 1-D list,
+  thumbnail: 2-D matrix,
+  headline: 2-D matrix,
+  style: 2-D matrix,
+  tags:2-D matrix ,
+  y: 1-D array}
   ...
 ```
 

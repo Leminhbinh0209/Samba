@@ -35,7 +35,7 @@ import yaml
 from meta_helper.h5py_func import read_dict
 
 os.environ ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = '0,1,2,3' 
+os.environ["CUDA_VISIBLE_DEVICES"] = '2,3' 
 
 with open('./config/config_meta.yaml', 'r') as stream:
         config = yaml.safe_load(stream)
@@ -127,9 +127,9 @@ def train_test_model(k_fold=10,
     
     print("Read embedding data...")
     instance_keys = ['thumbnail', 'headline', 'style', 'tags', 'y']
-    inputs = read_dict(data_dir +  'meta_embedding.hdf5', instance_keys)
+    inputs = read_dict(data_dir +  'meta_embedding.hdf5')
 
-    all_video_id = inputs['video_id']  
+    all_video_id = [u.decode('UTF-8') for u in inputs['video_id'].tolist()]
     all_thumbnails_features = np.asarray(inputs[instance_keys[0]], dtype=np.float32)       
     all_headlines_features =  np.asarray(inputs[instance_keys[1]], dtype=np.float32)    
     all_statistics_features = np.asarray(inputs[instance_keys[2]], dtype=np.float32)    
@@ -155,8 +155,10 @@ def train_test_model(k_fold=10,
     test_video_id = f.readlines()
     test_video_id = [i.strip() for i in test_video_id]
     f.close()
-    train_val_set_indices = [all_video_id.index(u) for u in train_video_id]
-    test_set_indices = [all_video_id.index(u) for u in test_video_id]
+
+    index_lookup = dict(zip(all_video_id, np.arange(len(all_video_id))))
+    train_val_set_indices = [index_lookup[u] for u in train_video_id]
+    test_set_indices = [index_lookup[u] for u in test_video_id]
 
     # uscs_big_subtitle = pd.read_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
     # uscs_big_subtitle = uscs_big_subtitle.loc[uscs_big_subtitle['video_id'].isin(all_video_id)]
@@ -346,6 +348,7 @@ def train_test_model(k_fold=10,
     Y_val_onehot = np.array([to_categorical(label, nb_classes) for label in Y_val])
     # if loss_function == 'binary_crossentropy':
     #         Y_val_onehot = Y_val
+    print('='*10 + " Start fitting model " +'='*10 )
     if config.method == 'aaai':
         print("AAAI proposed methods")
 
@@ -376,7 +379,7 @@ def train_test_model(k_fold=10,
                                         validation_data=(model_val_input, Y_val_onehot),
                                         shuffle=shuffle_training_set,
                                         verbose=1,
-                                        callbacks=[early_stopper ],
+                                        # callbacks=[ early_stopper],#
                                         epochs=nb_epochs)
         """
         SAVE the Model
@@ -438,7 +441,7 @@ def train_test_model(k_fold=10,
                 validation_data=(np.column_stack(model_val_input), Y_val_onehot),
                 shuffle=shuffle_training_set,
                 verbose=1,
-                callbacks=[early_stopper ],
+                # callbacks=[early_stopper ],
                 epochs=nb_epochs) 
 
         print('\n--- TRAINing has finished. SAVING THE FULL MODEL...')
@@ -456,7 +459,7 @@ def train_test_model(k_fold=10,
                 validation_data=(np.expand_dims(np.column_stack(model_val_input), axis=-1), Y_val_onehot),
                 shuffle=shuffle_training_set,
                 verbose=1,
-                callbacks=[early_stopper ],
+                # callbacks=[early_stopper ],
                 epochs=nb_epochs) 
 
         print('\n--- TRAINing has finished. SAVING THE FULL MODEL...')
@@ -468,7 +471,7 @@ def train_test_model(k_fold=10,
 
     elif config.method =='RF':
         print("Random Forest model")
-        model = RandomForestClassifier(n_estimators=100, verbose=1)
+        model = RandomForestClassifier(n_estimators=100, verbose=1, criterion='entropy')
         model.fit(X=np.column_stack(model_input), y=Y_train_oversampled.argmax(axis=1))
     elif config.method =='SVM':    
         
@@ -480,7 +483,7 @@ def train_test_model(k_fold=10,
         model.fit(X=np.column_stack(model_input), y=Y_train_oversampled.argmax(axis=1))
     elif config.method =='TREE':
         print("Decision Tree")
-        model =  DecisionTreeClassifier(random_state=config.random_seed)
+        model =  DecisionTreeClassifier(random_state=config.random_seed,  criterion='entropy')
         model.fit(X=np.column_stack(model_input), y=Y_train_oversampled.argmax(axis=1))
     elif config.method =='NB':
         print("Bernouli Naive Bayes")
@@ -574,8 +577,6 @@ def train_test_model(k_fold=10,
     print('--- TEST Precision: %.3f' % (test_precision))
     print('--- TEST Recall: %.3f' % (test_recall))
     print('--- TEST F1-Score: %.3f' % (test_f1_score))
-    
-  
     print('\033[0m')
   
 

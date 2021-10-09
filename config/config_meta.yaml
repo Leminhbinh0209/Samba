@@ -1,5 +1,5 @@
 data_folder: "./data/"
-dataset: "USCS"
+dataset: "CURVE"
 method: "aaai"
 random_seed: 41
 input_dim: 2160

@@ -56,9 +56,8 @@ Embedding data is exported to `meta_embedding.hdf5` that have structure:
   thumbnail: 2-D matrix,
   headline: 2-D matrix,
   style: 2-D matrix,
-  tags:2-D matrix ,
+  tags:2-D matrix,
   y: 1-D array}
-  ...
 ```
 
 #### 2.4 Word2vec subtitle embedding
@@ -70,8 +69,6 @@ Using video index in the `*big_meta.csv` file and and put subtitle in that order
 ```
 $ python subtitle_pre.py
 ```
-
-After running, `*big_subtitle.csv` will be created. Morover, the average word2vec embedding is save in 5 fold split at `transcripts/word2vec_embedding_5fold.json`.
 
 ## 3. Training
 

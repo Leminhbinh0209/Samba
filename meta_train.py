@@ -35,7 +35,7 @@ import yaml
 from meta_helper.h5py_func import read_dict
 
 os.environ ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = '2,3' 
+os.environ["CUDA_VISIBLE_DEVICES"] = '6,7' 
 
 with open('./config/config_meta.yaml', 'r') as stream:
         config = yaml.safe_load(stream)
@@ -340,6 +340,7 @@ def train_test_model(k_fold=10,
     model_input.append(X_train_headlines)
     model_input.append(X_train_statistics)
     model_input.append(X_train_video_tags)
+    config.input_dim = X_train_thumbnails.shape[1] + X_train_headlines.shape[1] + X_train_statistics.shape[1] + X_train_video_tags.shape[1]
 
     model_val_input.append(X_val_thumbnails)
     model_val_input.append(X_val_headlines)
@@ -494,7 +495,8 @@ def train_test_model(k_fold=10,
         model =  KNeighborsClassifier(n_neighbors=8, leaf_size=10)
         model.fit(X=np.column_stack(model_input), y=Y_train_oversampled.argmax(axis=1))
         
-    
+    else:
+        raise ValueError(f"Unknown method {config.method}")
     """
     [TEST] Evaluate the model 
     """

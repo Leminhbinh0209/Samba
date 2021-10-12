@@ -15,12 +15,6 @@ def save_dict(data_dict, filename):
 def read_dict(filename):
     """
     Two-level dictionary reading from h5py 
-        {
-            key1: {
-                intance_keys[0]: data,
-                intance_keys[1]: data,
-                ...}
-        ...}
     output:
         data-frame style dictionary
     """

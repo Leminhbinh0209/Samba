@@ -1,6 +1,6 @@
 data_folder: "./data/"
 dataset: "CURVE"
-method: "aaai"
+method: "LR"
 random_seed: 41
 input_dim: 2160
 

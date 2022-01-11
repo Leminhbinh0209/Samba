@@ -2,7 +2,7 @@
 """
 Created on Sun Oct 27 20:33:33 2018
 
-@author: kostantinos.papadamou
+@author: anonymous
 
 This Class implements the methods that generates extracted features for each video,
 which we will then use to train our LSTM. In addition, it also generates the features

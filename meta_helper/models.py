@@ -2,7 +2,7 @@
 """
 Created on Sun Oct 28 20:33:33 2018
 
-@author: kostantinos.papadamou
+@author: anonymous
 
 This class implements the Deep Learning Model for the detection of disturbing videos on YouTube.
 The data_peraparion.py uses a DATASET class which implements all the required methods for the retrieval and

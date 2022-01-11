@@ -3,7 +3,7 @@
 """
 Created on Thu Dec  2 16:59:33 2021
 
-@author: chingis
+@author: anonymous
 """
 import torch
 from torch.utils.data import Dataset

@@ -2,7 +2,7 @@
 """
 Created on Sun Oct 28 20:33:33 2018
 
-@author: kostantinos.papadamou
+@author: anonymous
 
 This file executes all the required functions that do the pre-processing of our data
 """

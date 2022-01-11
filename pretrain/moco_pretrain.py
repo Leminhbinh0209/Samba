@@ -3,7 +3,7 @@
 """
 Created on Thu Dec 23 12:04:28 2021
 
-@author: chingis
+@author: anonymous
 """
 
 #!/usr/bin/env python

@@ -3,7 +3,7 @@
 """
 Created on Thu Dec 23 12:08:10 2021
 
-@author: chingis
+@author: anonymous
 """
 
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved

@@ -3,7 +3,7 @@
 """
 Created on Fri Dec 10 13:31:31 2021
 
-@author: chingis
+@author: anonymous
 """
 import argparse
 import pickle

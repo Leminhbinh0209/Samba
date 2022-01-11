@@ -3,7 +3,7 @@
 """
 Created on Tue Dec  7 14:48:38 2021
 
-@author: chingis
+@author: anonymous
 """
 import torch.nn as nn
 from transformers import BertModel, BertTokenizer, BertForSequenceClassification

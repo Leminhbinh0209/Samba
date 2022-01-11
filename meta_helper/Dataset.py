@@ -2,7 +2,7 @@
 """
 Created on Sun Oct 28 20:33:33 2018
 
-@author: kostantinos.papadamou
+@author: anonymous
 
 This class implements all the functions that are required to retrieve all the data from our Dataset (MongoDB)
 and those stored to the disk and makes all the pre-processing required before training our model.

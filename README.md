@@ -8,6 +8,8 @@
 - Ubuntu 18.04.5 LTS
 - CUDA 11.3
 - Python 3.8.12
+
+
 ## 2. Dataset
 
 Download our subttitle and meta data, training and test data from our homepage. Then organize the dataset folder as follows:

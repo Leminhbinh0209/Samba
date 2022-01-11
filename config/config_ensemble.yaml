@@ -1,0 +1,14 @@
+data_folder: "./"
+dataset: "YOUTUBE"
+method: "ensemble"
+running_name: "meta_sublr_mocoemb"
+random_seed: 123
+GPU: "0"
+
+NB_CLASSES: 2 # the number of classes for our problem TODO: CHANGE THE NUMBER OF CLASSES HERE
+NB_EPOCHS: 4 # the number of epoch that the training of the model should run
+BATCH_SIZE: 64 # the number of inputs that should be added each loop of each epoch
+validation_split: 0.2 # Fraction (percentage) of the training data to be used as validation data.
+shuffle_training_set: True # whether to shuffle the training set after each epoch
+
+uni_embedding: 128

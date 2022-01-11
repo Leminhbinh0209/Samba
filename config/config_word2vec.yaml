@@ -1,5 +1,5 @@
 data_folder: "./data/"
-dataset: "USCS"
+dataset: "youtube"
 method: "LR"
 random_seed: 41
 batch_size: 512

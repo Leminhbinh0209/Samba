@@ -107,16 +107,16 @@ def CNN_model(train_tokens):
 
 def main(config):
     ### Read and split dataset
-    uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
-    uscs_big_subtitle = pd.read_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
-    target = uscs_big_subtitle.label.values
+    youtube_dir = f"{config.data_folder}/{config.dataset}_data/" 
+    youtube_big_subtitle = pd.read_csv(youtube_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
+    target = youtube_big_subtitle.label.values
     
     # Word2Vec Embedding 
-    with open(uscs_dir + "/transcripts/word2vec_embedding_5fold.json", 'rb') as fp:
+    with open(youtube_dir + "/transcripts/word2vec_embedding_5fold.json", 'rb') as fp:
         word2vec_dict = pickle.load(fp)
     print( "SEE: ",word2vec_dict)
     # Use K fold split by channel ID
-    with open(uscs_dir + "/meta_data/k_fold_channel.json", 'rb') as fp:
+    with open(youtube_dir + "/meta_data/k_fold_channel.json", 'rb') as fp:
         print("Load K FOLD by CHANNEL")
         k_fold_channel = pickle.load(fp)
     print( "SEE: ",k_fold_channel)
@@ -128,7 +128,7 @@ def main(config):
     tic = time()
 
     for idx in range(5):
-        out_folder = f"{uscs_dir}/word2vec/{config.method}/fold-{idx+1}/"
+        out_folder = f"{youtube_dir}/word2vec/{config.method}/fold-{idx+1}/"
         os.makedirs(out_folder, exist_ok=True)
 
         train_val_set_indices, test_set_indices = k_fold_channel[idx]['train'], k_fold_channel[idx]['test']
@@ -141,11 +141,11 @@ def main(config):
         print("Number test samples: ", X_test.shape[0], len(Y_test))
 
         if config.method  =="CNN":
-            train_val_tokens = uscs_big_subtitle.loc[train_val_set_indices, 'subtitle'].values
-            print(uscs_big_subtitle.head())
+            train_val_tokens = youtube_big_subtitle.loc[train_val_set_indices, 'subtitle'].values
+            print(youtube_big_subtitle.head())
             print(train_val_tokens[0:])
             
-            test_tokens = uscs_big_subtitle.loc[test_set_indices, 'subtitle'].values.tolist()
+            test_tokens = youtube_big_subtitle.loc[test_set_indices, 'subtitle'].values.tolist()
             # train test
             Y_train_val = np.take(target, indices=train_val_set_indices, axis=0)
             Y_test = np.take(target, indices=test_set_indices, axis=0)

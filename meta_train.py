@@ -116,8 +116,8 @@ def train_test_model(k_fold=10,
     early_stopper = EarlyStopping(mode='auto', verbose=2, monitor='val_loss', restore_best_weights=True, patience=early_stopping_patience)
 
     ### Read and split dataset
-    uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
-    data_dir = f"{uscs_dir}/meta_data/meta_emb/"
+    youtube_dir = f"{config.data_folder}/{config.dataset}_data/" 
+    data_dir = f"{youtube_dir}/meta_data/meta_emb/"
     
         
     with open(data_dir + 'voc.json') as outfile:
@@ -146,12 +146,12 @@ def train_test_model(k_fold=10,
     """
     Train and Test Video id loading
     """
-    f = open(f"{uscs_dir}{config.dataset.lower()}_train_videos.txt", "r")
+    f = open(f"{youtube_dir}{config.dataset.lower()}_train_videos.txt", "r")
     train_video_id = f.readlines()
     train_video_id = [i.strip() for i in train_video_id]
     f.close()
 
-    f = open(f"{uscs_dir}{config.dataset.lower()}_test_videos.txt", "r")
+    f = open(f"{youtube_dir}{config.dataset.lower()}_test_videos.txt", "r")
     test_video_id = f.readlines()
     test_video_id = [i.strip() for i in test_video_id]
     f.close()
@@ -160,9 +160,9 @@ def train_test_model(k_fold=10,
     train_val_set_indices = [index_lookup[u] for u in train_video_id]
     test_set_indices = [index_lookup[u] for u in test_video_id]
 
-    # uscs_big_subtitle = pd.read_csv(uscs_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
-    # uscs_big_subtitle = uscs_big_subtitle.loc[uscs_big_subtitle['video_id'].isin(all_video_id)]
-    # all_video_subtitle_features = uscs_big_subtitle.loc[:, 'subtitle'].values
+    # youtube_big_subtitle = pd.read_csv(youtube_dir + f"transcripts/{config.dataset.lower()}_big_subtitle.csv")
+    # youtube_big_subtitle = youtube_big_subtitle.loc[youtube_big_subtitle['video_id'].isin(all_video_id)]
+    # all_video_subtitle_features = youtube_big_subtitle.loc[:, 'subtitle'].values
 
     thumbnails_num_examples = len(all_thumbnails_features)
 
@@ -174,7 +174,7 @@ def train_test_model(k_fold=10,
     # For final evaluation
     dataset_pred_binary = np.zeros_like(dataset_labels_binary)
     
-    out_folder = f"{uscs_dir}/meta_data/{config.method}/"
+    out_folder = f"{youtube_dir}/meta_data/{config.method}/"
     os.makedirs(out_folder, exist_ok=True)
 
     print('\n\n-----------------------------------------------------------------')

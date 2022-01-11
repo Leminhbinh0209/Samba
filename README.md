@@ -2,46 +2,29 @@
 
 ## 1. Dataset
 
-We use `*big_meta.csv` file as a standard and split data. The dataset folder is organized as follow:
+Download our subttitle and meta data, training and validation data from our homepage. Then organize the dataset folder as follows:
 
 ```
 ./data
-  |--USCS_data
-  |        |---meta_data
-  |        |---transcripts
-  |
-  |
-  |--CURVE_data
+  |--YOUTUBE_data
           |---meta_data
           |---transcripts
 
 
 ```
 
-- For the USCS dataset, download the meta data csv file [here](https://drive.google.com/file/d/1RtN7aIjP7JMI4GA4HaB6UaDmulLyGBPR/view?usp=sharing) and put into the `meta_data` folder, and the subtitle input file [here](https://drive.google.com/file/d/17C0mZoLzL8hslV-V2pfP5QxwHPe1c4Af/view?usp=sharing) and put to the `transcripts` folder.
-- For the CURVE dataset, download the meta data csv file [here](https://drive.google.com/drive/u/1/folders/1A-6fbxJTOOTBnUmgxQ3qhMiDj4rysLsu), and the subtitle [here](https://drive.google.com/drive/u/1/folders/19FmlSkpgy30t_3jAxpTk5vzgM9z0d9IG).
-
 ## 2. Data pre-processing
 
-#### 2.1 Train-test split
 
-**Dev Stage**: Please use pre-splited data can be downloaded directly [here](https://drive.google.com/drive/u/1/folders/1DxemCy87tvfS2C_NUdWV-OA3zAwGd948) and [here](https://drive.google.com/drive/u/1/folders/1pRgR6hMH2Z_ccOPuWDBNc0eyu05Je5mP).
+#### 2.1 Download thumbnail photos
 
-Modify dataset name (i.e., USCS or CURVE) in config file `./config/config_pre.yaml`, then run:
-
-```
-$ python train_test_split.py
-```
-
-#### 2.2 Download thumbnail photos
-
-Download and embed the thumbnail images using InceptionNet
+Download and embed the thumbnail images using InceptionNet, or you can download embedding vector directly from our homepage.
 
 ```
 $ python thumbnail_download.py
 ```
 
-#### 2.3 Meta feature embedding
+#### 2.2 Meta feature embedding
 
 Embed all the features: headline, tags, style, thumbnail by running:
 
@@ -60,7 +43,7 @@ Embedding data is exported to `meta_embedding.hdf5` that have structure:
   y: 1-D array}
 ```
 
-#### 2.4 Word2vec subtitle embedding
+#### 2.3 Word2vec subtitle embedding
 
 _Note: This process may take time since the pre-trained word2vec model used to embedding subtitle._
 
@@ -88,10 +71,10 @@ Modify the ML method in `config/config_word2vec.yaml` file at **line 3**. Start 
 $ python subtitle_word2vec_train.py
 ```
 
-#### 3.3 Average ensemble
+#### 3.3 SAMBA model
 
-Change ensemble methods at **line 30** of `average_ensemble.py` and run
+
 
 ```
-$ python average_ensemble.py
+$ python train.py
 ```

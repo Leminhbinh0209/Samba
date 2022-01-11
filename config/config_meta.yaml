@@ -1,5 +1,5 @@
 data_folder: "./data/"
-dataset: "CURVE"
+dataset: "YOUTUBE"
 method: "LR"
 random_seed: 41
 input_dim: 2160

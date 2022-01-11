@@ -14,12 +14,12 @@ import h5py
 os.environ["CUDA_VISIBLE_DEVICES"] = '0' 
 
 def main(config):
-    uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
-    uscs_big_meta = pd.read_csv(uscs_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
-    emb_folder = f"{uscs_dir}/meta_data/meta_emb/"
+    youtube_dir = f"{config.data_folder}/{config.dataset}_data/" 
+    youtube_big_meta = pd.read_csv(youtube_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
+    emb_folder = f"{youtube_dir}/meta_data/meta_emb/"
     os.makedirs(emb_folder, exist_ok=True)
-    img_dir = uscs_dir + f"meta_data/thumbnail/"
-    thumb_emb_dir = uscs_dir + f"meta_data/thumbnail_emb/"
+    img_dir = youtube_dir + f"meta_data/thumbnail/"
+    thumb_emb_dir = youtube_dir + f"meta_data/thumbnail_emb/"
 
     '''
         First round for statistic
@@ -28,7 +28,7 @@ def main(config):
     max_headlines = 0
     tags_voc = dict()
     max_tags = 0
-    for index, video_information in tqdm(uscs_big_meta.iterrows()):
+    for index, video_information in tqdm(youtube_big_meta.iterrows()):
         # Headlines
         video_headline = video_information.title
         headline_sequence = text_to_word_sequence(video_headline)
@@ -58,7 +58,7 @@ def main(config):
     
     data_dict = edict({'video_id':[], 'thumbnail':[], 'headline':[], 'style':[], 'tags':[], 'y':[]})
     CNN_feature_extractor_model = CNN_MODEL()
-    for index, video_information in tqdm(uscs_big_meta.iterrows()):
+    for index, video_information in tqdm(youtube_big_meta.iterrows()):
         X_general_style_features_in = get_video_general_style_features(video_information)
         video_headline = video_information.title
         X_headline_features_in = preprocess_headlines_one_hot(video_headline=video_headline, 

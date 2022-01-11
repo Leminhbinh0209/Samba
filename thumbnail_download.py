@@ -8,17 +8,17 @@ from easydict import EasyDict as edict
 import yaml
 
 def main(config):
-    uscs_dir = f"{config.data_folder}/{config.dataset}_data/" 
-    uscs_big_meta = pd.read_csv(uscs_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
+    youtube_dir = f"{config.data_folder}/{config.dataset}_data/" 
+    youtube_big_meta = pd.read_csv(youtube_dir + f"meta_data/{config.dataset.lower()}_big_meta.csv", index_col='video_id', lineterminator='\n').reset_index()
 
-    img_dir = uscs_dir + f"meta_data/thumbnail/"
-    emb_dir = uscs_dir + f"meta_data/thumbnail_emb/"
+    img_dir = youtube_dir + f"meta_data/thumbnail/"
+    emb_dir = youtube_dir + f"meta_data/thumbnail_emb/"
 
     os.makedirs(img_dir, exist_ok=True)
     os.makedirs(emb_dir, exist_ok=True)
 
-    list_thumbnail = uscs_big_meta.thumbnail_url.values.tolist() 
-    list_ids = uscs_big_meta.video_id.values.tolist()
+    list_thumbnail = youtube_big_meta.thumbnail_url.values.tolist() 
+    list_ids = youtube_big_meta.video_id.values.tolist()
 
     for vid, url_vid in tqdm(zip(list_ids, list_thumbnail)):
         if not os.path.exists(img_dir + vid + '.png'):

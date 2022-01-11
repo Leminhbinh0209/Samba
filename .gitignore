@@ -1,5 +1,5 @@
-./data/USCS_data/meta_data/thumbnail/
-./data/USCS_data/meta_data/thumbnail_emb/
+./data/youtube_data/meta_data/thumbnail/
+./data/youtube_data/meta_data/thumbnail_emb/
 *.npy
 *.png
 *.pyc

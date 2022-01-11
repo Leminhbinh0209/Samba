@@ -1,4 +1,4 @@
-# Youtube Video Detection
+# Inappropriate Kid Youtube Video Detection
 
 ## 1. Dataset
 

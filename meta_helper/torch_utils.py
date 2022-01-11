@@ -77,12 +77,11 @@ def accuracy(output, target, topk=[1]):
         res.append(correct_k.mul_(1.0 / batch_size))
     return res
 
-def save_model(save_dir, epoch, model, optimizer, lr_scheduler,  best=False):
+def save_model(save_dir, epoch, model, optimizer,  best=False):
     state = {
         'epoch': epoch,
         'state_dict': model.state_dict(),
         'optimizer': optimizer.state_dict(),
-        'lr_scheduler': lr_scheduler.state_dict(),
     }
     filename = str('_'.join([save_dir, 'current.pth']))
     torch.save(state, filename)

@@ -200,14 +200,6 @@ def main():
                            {'params': headline_params, 'lr': 1e-3},
                            {'params': video_params, 'lr': 1e-3},
                            {'params': general_params, 'lr': 1e-3}])  
-    lr_scheduler = CosineAnnealingLR(optimizer, T_max=5, eta_min=0)
-    # lr_scheduler = torch.optim.lr_scheduler.OneCycleLR(
-    #     optimizer=optimizer,
-    #     max_lr=1e-3,
-    #     epochs=config.NB_EPOCHS,
-    #     steps_per_epoch=len(train_dataloader),
-    #     pct_start=0.05,
-    #     total_steps=None)
 
     scaler = torch.cuda.amp.GradScaler()
     
@@ -247,8 +239,7 @@ def main():
             sys.stdout.write("Train Epoch: {e:02d} Batch: {batch:04d}/{size:04d} |  Loss:{loss:.4f} | Acc: {acc:.4f}"\
                             .format(e=epoch+1, batch=batch_idx+1, size=len(train_dataloader),\
                                     loss=train_loss.avg, acc=train_acc.avg))
-            # lr_scheduler.step()
-        lr_scheduler.step()
+     
         metanet.eval()
         with torch.no_grad():
             val_loss = AverageMeter()
@@ -281,7 +272,7 @@ def main():
                 patience = 0
             else:
                 patience += 1
-            save_model(checkpoint_dir, epoch, metanet, optimizer, lr_scheduler,  best)
+            save_model(checkpoint_dir, epoch, metanet, optimizer,  best)
        
       
 

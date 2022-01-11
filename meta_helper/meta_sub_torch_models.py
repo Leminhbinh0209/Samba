@@ -14,10 +14,7 @@ from .torch_utils import init_all
 
 def _create_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
     """
-    seq 형태를  (256, 33) -> (256, 1, 31) 이렇게 변경합니다.
 
-    아래와 같이 padding index부분을 False로 변경합니다. (리턴 tensor)
-    아래의 vector 하나당 sentence라고 보면 되고, True로 되어 있는건 단어가 있다는 뜻.
     tensor([[[ True,  True,  True,  True, False, False, False]],
             [[ True,  True, False, False, False, False, False]],
             [[ True,  True,  True,  True,  True,  True, False]]])
@@ -89,18 +86,8 @@ class MetaLoader(Dataset):
             _, sub_emb, _ = pickle.load(open(dir_, 'rb'))
         except:
             print(dir_, "\n")
-        assert sub_emb.shape[1] == 768, f"ERROR: lenght of subtitle is not 768"
-        # assert (sub_emb.max() <= 1) and (sub_emb.min() >= -1), f"ERROR: values of subtitle not in [-1, 1]"
-        # if len(sub_emb) > 500:
-        #     i = random.choice(range(len(sub_emb) - 500))
-        #     sub_emb = sub_emb[i:i+500, :]
-        
-        # if (self.mode=='train') and (random.uniform(0, 1) > 0.5) and (len(sub_emb) > 1):
-        #     np.random.shuffle(sub_emb)
-        
-        
+        assert sub_emb.shape[1] == 768, f"ERROR: lenght of subtitle is not 768"        
         label = self.labels[idx]
-        
         data = {"thumbnails": self.thumbnails[idx],
                "headlines": self.headlines[idx],
                 "statistics": self.statistics[idx],
@@ -398,13 +385,8 @@ class MetaverseNet(torch.nn.Module):
 
         self.dropout = nn.Dropout(p=self.drop_out)
         if self.apply_attention:
-            self.dropout_att = nn.Dropout(p=0.2)
-
-            assert self.output_size % 2== 0
-            self.hidden_size = self.output_size//2
-            self.w_f = nn.Linear(self.hidden_size, self.hidden_size) 
-            self.w_i = nn.Linear(self.hidden_size, self.hidden_size) 
-            self.out_layer = torch.nn.Linear(5 * self.hidden_size, 2)
+            self.fc0 = nn.Linear(self.output_size, 256)
+            self.fc1 = nn.Linear(256, 1) 
         
         elif self.apply_pooling:
             self.rnn = nn.GRU(input_size=self.output_size, 
@@ -430,7 +412,7 @@ class MetaverseNet(torch.nn.Module):
         general_params =  list(self.out_layer.parameters())  # + list(self.rnn.parameters()) 
         if self.apply_attention:
             print("Add attention param ")
-            general_params += list(self.w_f.parameters()) + list(self.w_i.parameters())
+            general_params += list(self.fc0.parameters()) + list(self.fc1.parameters())
         elif self.apply_pooling:
             print("Add pooling param ")
             general_params += list(self.rnn.parameters()) 
@@ -449,16 +431,20 @@ class MetaverseNet(torch.nn.Module):
         subtitle_emb = self.subtitle_net (x["sub_emb"], x["mask"]) # B x output_size 
         x_embs = torch.cat(( thumbnail_emb, statistics_emb, headline_emb,  videotag_emb, subtitle_emb), dim=1)
         # Apply gated linear output
+       # Apply non-local attention
         if self.apply_attention:
-            features = x_embs.reshape(-1, 5, self.output_size)
-            features_1 = features[:,:,:self.hidden_size]
-            features_2 = features[:,:,-self.hidden_size:]
+            features = torch.cat((thumbnail_emb, statistics_emb, headline_emb,  videotag_emb, subtitle_emb), dim=1).reshape(-1, 5, self.output_size)
+            #print(features.shape)
+            features_1 = self.dropout(torch.tanh(self.fc0(features)))
+            # N x S x 1
+            features_1 = self.fc1(features_1).squeeze(-1)
+        
+            # N x S x 1
+            features_1 = torch.softmax(features_1, 1).unsqueeze(2)
+            #print(features_1.shape)
+            # N x S x D
+            x_embs = torch.einsum('nsk,nsd->nkd', (features_1,features )).squeeze(1)
 
-            f_input = torch.sigmoid(self.w_i(features_2)) * torch.tanh(features_2)
-            f_forget = torch.sigmoid(self.w_f(features_2)) * torch.tanh(features_1)
-            # x_embs = torch.sum(f_forget + f_input, dim=1).squeeze(1)
-            x_embs = (f_forget + f_input).reshape( -1, 5 * self.hidden_size)
-      
         elif self.apply_pooling:
             features = x_embs.reshape(-1, 5, self.output_size)
             _, x_embs = self.rnn(features)

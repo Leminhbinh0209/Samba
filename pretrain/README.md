@@ -10,7 +10,7 @@ $ python moco_pretrain.py --data [DATA.csv] --moco-k 512 --moco-t 0.07 --moco-di
 
 #### 1.2 MoCo Document embedding
 
-First, your sequences should be pre-processed and saved as .csv file:
+First, create a folder where embeddings will be saved:
 
 ```
 $ python embedd_docs.py --document [DATA.csv] --save [SAVE_FOLDER] --checkpoint [BERT ENCODER CHECKPOINT]

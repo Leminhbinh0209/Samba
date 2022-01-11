@@ -12,10 +12,9 @@ import torch
 from torch.utils.data import DataLoader
 from model import BertClassifier
 from pretrain_dataset import TextDataset
-import torch.nn as nn
 from tqdm import tqdm
 import torch.multiprocessing
-import moco.builder
+
 torch.multiprocessing.set_sharing_strategy('file_system')
 parser = argparse.ArgumentParser(description='Document embedding')
 

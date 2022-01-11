@@ -1,8 +1,16 @@
 # Inappropriate Kid Youtube Video Detection
+## Overview of our framework
+<p align="center">
+    <img src="https://i.ibb.co/Dbppg5T/main-architecture.png" width="960" alt="overall pipeline">
+<p>
+    
+## 1. Installation
+- Ubuntu 18.04.5 LTS
+- CUDA 11.3
+- Python 3.8.12
+## 2. Dataset
 
-## 1. Dataset
-
-Download our subttitle and meta data, training and validation data from our homepage. Then organize the dataset folder as follows:
+Download our subttitle and meta data, training and test data from our homepage. Then organize the dataset folder as follows:
 
 ```
 ./data
@@ -13,10 +21,10 @@ Download our subttitle and meta data, training and validation data from our home
 
 ```
 
-## 2. Data pre-processing
+## 3. Data pre-processing
 
 
-#### 2.1 Download thumbnail photos
+#### 3.1 Download thumbnail photos
 
 Download and embed the thumbnail images using InceptionNet, or you can download embedding vector directly from our homepage.
 
@@ -24,7 +32,7 @@ Download and embed the thumbnail images using InceptionNet, or you can download 
 $ python thumbnail_download.py
 ```
 
-#### 2.2 Meta feature embedding
+#### 3.2 Meta feature embedding
 
 Embed all the features: headline, tags, style, thumbnail by running:
 
@@ -43,7 +51,7 @@ Embedding data is exported to `meta_embedding.hdf5` that have structure:
   y: 1-D array}
 ```
 
-#### 2.3 Word2vec subtitle embedding
+#### 3.3 Word2vec subtitle embedding
 
 _Note: This process may take time since the pre-trained word2vec model used to embedding subtitle._
 
@@ -53,9 +61,9 @@ Using video index in the `*big_meta.csv` file and and put subtitle in that order
 $ python subtitle_pre.py
 ```
 
-## 3. Training
+## 4. Training
 
-#### 3.1 Meta training
+#### 4.1 Meta training
 
 Modify the ML method in `config/config_meta.yaml` file at **line 3**. Start training by runining:
 
@@ -63,7 +71,7 @@ Modify the ML method in `config/config_meta.yaml` file at **line 3**. Start trai
 $ python meta_train.py
 ```
 
-#### 3.2 Word2Vec training
+#### 4.2 Word2Vec training
 
 Modify the ML method in `config/config_word2vec.yaml` file at **line 3**. Start training by runining:
 
@@ -71,7 +79,7 @@ Modify the ML method in `config/config_word2vec.yaml` file at **line 3**. Start 
 $ python subtitle_word2vec_train.py
 ```
 
-#### 3.3 SAMBA model
+#### 4.3 SAMBA model
 
 
 

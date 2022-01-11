@@ -1,5 +1,3 @@
-./data/youtube_data/meta_data/thumbnail/
-./data/youtube_data/meta_data/thumbnail_emb/
 *.npy
 *.png
 *.pyc

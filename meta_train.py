@@ -282,16 +282,6 @@ def train_test_model(k_fold=10,
     """
     VIDEOS SUBTILE
     """
-    # X_train_val_video_subtitle = np.take(all_video_subtitle_features, indices=train_val_set_indices, axis=0)
-    # X_train_video_subtitle = np.take(X_train_val_video_subtitle, indices=indices_train, axis=0)
-    # X_val_video_subtitle = np.take(X_train_val_video_subtitle, indices=indices_val, axis=0)
-
-    # OVERSAMPLE TRAIN
-    # if apply_oversampling:
-    #     X_train_video_subtitle, Y_train_s = smote.fit_resample(X_train_video_subtitle, Y_train_binary)
-
-    # TEST
-    # X_test_video_subtitle = np.take(all_video_subtitle_features, indices=test_set_indices, axis=0) 
 
     # Get Oversampled categorical Y_train
     if apply_oversampling:
@@ -391,48 +381,6 @@ def train_test_model(k_fold=10,
         # Save the whole Model with its weights
         disturbed_youtube_model.model.save(final_model_store_path, save_format='tf')
 
-    # if config.method == 'ensemble':
-    #     print("Proposed Ensemblem method")
-    #     model_input.append(X_train_video_subtitle)
-    #     model_val_input.append(X_val_video_subtitle)
-    #     disturbed_youtube_model = ENSEMBLE_DISTURBED_YOUTUBE_MODEL(saved_model_path=None,
-    #                                             thumbnails_num_examples=thumbnails_num_examples,
-    #                                             headlines_words_seq_length=headlines_words_seq_length,
-    #                                             headlines_vocab_size=headlines_vocab_size,
-    #                                             video_tags_seq_length=video_tags_seq_length,
-    #                                             video_tags_vocab_size=video_tags_vocab_size,
-    #                                             train_subtitle=X_train_video_subtitle,
-    #                                             other_features_type=other_features_type,
-    #                                             nb_classes=nb_classes,
-    #                                             nb_epochs=nb_epochs,
-    #                                             dropout_level=dropout_level,
-    #                                             text_input_dropout_level=text_input_dropout_level,
-    #                                             batch_size=batch_size,
-    #                                             learning_rate=learning_rate,
-    #                                             adam_beta_1=adam_beta_1,
-    #                                             adam_beta_2=adam_beta_2,
-    #                                             decay=decay,
-    #                                             epsilon=epsilon,
-    #                                             loss_function=loss_function,
-    #                                             final_dropout_level=final_dropout_level,
-    #                                             dimensionality_reduction_layers=dimensionality_reduction_layers)
-        
-    #     disturbed_youtube_model.model.fit(model_input,
-    #                                     Y_train_oversampled,
-    #                                     batch_size=batch_size,
-    #                                     validation_data=(model_val_input, Y_val_onehot),
-    #                                     shuffle=shuffle_training_set,
-    #                                     verbose=1,
-    #                                     callbacks=[early_stopper ],
-    #                                     epochs=nb_epochs) # 
-    #     """
-    #     SAVE the Model
-    #     """
-    #     print('\n--- TRAINing has finished. SAVING THE FULL MODEL...')
-    #     final_model_store_path = MODELS_BASE_DIR + '/' + str(kfold_cntr) + '/' + model_filename + 'final.tf'
-    #     # Save the whole Model with its weights
-    #     disturbed_youtube_model.model.save(final_model_store_path, save_format='tf')
-
     elif config.method == 'dnn':
         print("Double layer deep neural networks")
         model = simple_dnn(config.input_dim, None)
@@ -514,38 +462,6 @@ def train_test_model(k_fold=10,
         np.save(file=f"{out_folder}/test.npy", arr=test_pred_prob, allow_pickle=True, fix_imports=True)  
         test_pred = test_pred_prob.argmax(axis=1)
 
-        # elif config.method == 'ensemble':
-        #     model_test_input.append(X_test_video_subtitle)
-        #     # saved_model_path = MODELS_BASE_DIR + '/' + str(kfold_cntr) + '/' + model_filename + 'final.tf'
-        #     # disturbed_youtube_model = ENSEMBLE_DISTURBED_YOUTUBE_MODEL(load_saved_model=True, 
-        #     #                                                     saved_model_path=saved_model_path,
-        #     #                                                     thumbnails_num_examples=thumbnails_num_examples,
-        #     #                                                     headlines_words_seq_length=headlines_words_seq_length,
-        #     #                                                     headlines_vocab_size=headlines_vocab_size,
-        #     #                                                     video_tags_seq_length=video_tags_seq_length,
-        #     #                                                     video_tags_vocab_size=video_tags_vocab_size,
-        #     #                                                     train_subtitle=X_train_video_subtitle,
-        #     #                                                     other_features_type=other_features_type,
-        #     #                                                     nb_classes=nb_classes,
-        #     #                                                     nb_epochs=nb_epochs,
-        #     #                                                     dropout_level=dropout_level,
-        #     #                                                     text_input_dropout_level=text_input_dropout_level,
-        #     #                                                     batch_size=batch_size,
-        #     #                                                     learning_rate=learning_rate,
-        #     #                                                     adam_beta_1=adam_beta_1,
-        #     #                                                     adam_beta_2=adam_beta_2,
-        #     #                                                     decay=decay,
-        #     #                                                     epsilon=epsilon,
-        #     #                                                     loss_function=loss_function,
-        #     #                                                     final_dropout_level=final_dropout_level,
-        #     #                                                     dimensionality_reduction_layers=dimensionality_reduction_layers)
-
-        #     # print('--- Model Loaded successfully from directory!')
-        #     test_pred_proba = disturbed_youtube_model.model.predict(model_test_input, batch_size=batch_size, verbose=1, steps=None)
-        #     if loss_function == 'binary_crossentropy':
-        #         test_pred = (test_pred_proba > 0.5).astype(np.int16)
-        #     else:
-        #         test_pred = test_pred_proba.argmax(axis=1)
 
     elif config.method in ['dnn']:
         saved_model_path = MODELS_BASE_DIR + '/'  + model_filename + 'final.tf'

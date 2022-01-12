@@ -96,5 +96,4 @@ if __name__ == "__main__":
     with open('./config/config_pre.yaml', 'r') as stream:
         config = yaml.safe_load(stream)
     config = edict(config)
-    
     main(config)

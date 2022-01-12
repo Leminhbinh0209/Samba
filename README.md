@@ -1,4 +1,4 @@
-# Inappropriate Kid Youtube Video Detection
+# Samba: Identifying Inappropriate Videos for Young Children on YouTube
 ## Overview of our framework
 <p align="center">
     <img src="https://i.ibb.co/Dbppg5T/main-architecture.png" width="960" alt="overall pipeline">
@@ -82,7 +82,7 @@ $ python subtitle_word2vec_train.py
 ```
 
 #### 4.3 SAMBA model
-
+Follow the README document in ```pretrain``` folder to create subtitles' embeddings. The run:
 
 
 ```

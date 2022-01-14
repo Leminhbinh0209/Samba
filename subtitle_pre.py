@@ -33,7 +33,7 @@ def get_features(words, model, num_features):
     
     for w in words:
         if w in index2word_set:
-            num_words = 1
+            num_words += 1
             feature_vector += model.wv[w].reshape((num_features, ))
     feature_vector = np.divide(feature_vector, num_words)
     return feature_vector

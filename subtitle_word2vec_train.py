@@ -132,7 +132,7 @@ def main(config):
     test_video_id = f.readlines()
     test_video_id = [i.strip() for i in test_video_id]
     f.close()
-
+ 
     index_lookup = dict(zip(youtube_big_subtitle.video_id.values, np.arange(len(youtube_big_subtitle))))
     train_val_set_indices = [index_lookup[u] for u in train_video_id if u in index_lookup]
     test_set_indices = [index_lookup[u] for u in test_video_id if u in index_lookup]

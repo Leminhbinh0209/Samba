@@ -112,130 +112,123 @@ def main(config):
     target = youtube_big_subtitle.label.values
     
     # Word2Vec Embedding 
-    with open(youtube_dir + "/transcripts/word2vec_embedding_5fold.json", 'rb') as fp:
+    with open(youtube_dir + "/transcripts/word2vec_embedding.json", 'rb') as fp:
         word2vec_dict = pickle.load(fp)
-    print( "SEE: ",word2vec_dict)
-    # Use K fold split by channel ID
-    with open(youtube_dir + "/meta_data/k_fold_channel.json", 'rb') as fp:
-        print("Load K FOLD by CHANNEL")
-        k_fold_channel = pickle.load(fp)
-    print( "SEE: ",k_fold_channel)
+ 
+ 
     # For final evaluation
     dataset_pred_binary = np.zeros_like(target)
-
-    kfold_cntr = 1
-    folds_performance_metrics = list()
     tic = time()
 
-    for idx in range(5):
-        out_folder = f"{youtube_dir}/word2vec/{config.method}/fold-{idx+1}/"
-        os.makedirs(out_folder, exist_ok=True)
+    out_folder = f"{youtube_dir}/word2vec/{config.method}//"
+    os.makedirs(out_folder, exist_ok=True)
 
-        train_val_set_indices, test_set_indices = k_fold_channel[idx]['train'], k_fold_channel[idx]['test']
-        Y_train = np.take(target, indices=train_val_set_indices, axis=0)
-        Y_test = np.take(target, indices=test_set_indices, axis=0)
-        X_train = word2vec_dict[idx]["train"]
-        X_test = word2vec_dict[idx]["test"]
-        print("=== Model training infor ===")
-        print("Number training samples: ", X_train.shape[0], len(Y_train))
-        print("Number test samples: ", X_test.shape[0], len(Y_test))
+    f = open(f"{youtube_dir}{config.dataset.lower()}_train_videos.txt", "r")
+    train_video_id = f.readlines()
+    train_video_id = [i.strip() for i in train_video_id]
+    f.close()
 
-        if config.method  =="CNN":
-            train_val_tokens = youtube_big_subtitle.loc[train_val_set_indices, 'subtitle'].values
-            print(youtube_big_subtitle.head())
-            print(train_val_tokens[0:])
-            
-            test_tokens = youtube_big_subtitle.loc[test_set_indices, 'subtitle'].values.tolist()
-            # train test
-            Y_train_val = np.take(target, indices=train_val_set_indices, axis=0)
-            Y_test = np.take(target, indices=test_set_indices, axis=0)
+    f = open(f"{youtube_dir}{config.dataset.lower()}_test_videos.txt", "r")
+    test_video_id = f.readlines()
+    test_video_id = [i.strip() for i in test_video_id]
+    f.close()
 
-            # train - val
-            indices_train, indices_val = stratified_train_val_split(set_labels=Y_train, val_size=0.2)
-            # Get Y_train and Y_val
-            train_tokens = np.take(train_val_tokens, indices=indices_train, axis=0).tolist()
-            Y_train = np.take(Y_train_val, indices=indices_train, axis=0).tolist()
-            val_tokens = np.take(train_val_tokens, indices=indices_val, axis=0).tolist()
-            Y_val = np.take(Y_train_val, indices=indices_val, axis=0).tolist()
-            print(train_tokens[:3])
-            print(Y_train[:3])
-            model = CNN_model(train_tokens)
-            early_stopper = EarlyStopping(mode='auto', verbose=2, monitor='val_loss', restore_best_weights=True, patience=10)
-            model.fit(train_tokens, Y_train, 
-                        batch_size=config.batch_size, 
-                        validation_data=(val_tokens, Y_val), 
-                        epochs=50,
-                        callbacks=[early_stopper])
+    index_lookup = dict(zip(youtube_big_subtitle.video_id.values, np.arange(len(youtube_big_subtitle))))
+    train_val_set_indices = [index_lookup[u] for u in train_video_id if u in index_lookup]
+    test_set_indices = [index_lookup[u] for u in test_video_id if u in index_lookup]
 
-            train_prob = model.predict(train_val_tokens.tolist()).flatten()
-            test_prob = model.predict(test_tokens).flatten()
-            np.save(file=f"{out_folder}/train.npy", arr=train_prob, allow_pickle=True, fix_imports=True)
-            np.save(file=f"{out_folder}/test.npy", arr=test_prob, allow_pickle=True, fix_imports=True)  
+    Y_train = np.take(target, indices=train_val_set_indices, axis=0)
+    Y_test = np.take(target, indices=test_set_indices, axis=0)
+    X_train = word2vec_dict["train"]
+    X_test = word2vec_dict["test"]
+    print("=== Model training infor ===")
+    print("Number training samples: ", X_train.shape[0], len(Y_train))
+    print("Number test samples: ", X_test.shape[0], len(Y_test))
 
-            test_pred = (test_prob > 0.5).astype(np.int)
-            del model
-
-        elif config.method =='RF':
-            print("Random Forest model")
-            model = RandomForestClassifier(n_estimators=100, verbose=1)
-            model.fit(X=X_train, y=Y_train)
-        elif config.method =='SVM':    
-            model = SVC(kernel='rbf', cache_size=2000, probability=True)
-            model.fit(X=X_train, y=Y_train)
-        elif config.method =='LR':
-            print("Logistic Regressinon")
-            model =  LogisticRegression(random_state=config.random_seed, fit_intercept=False)
-            model.fit(X=X_train, y=Y_train)
-        elif config.method =='TREE':
-            print("Decision Tree")
-            model =  DecisionTreeClassifier(random_state=config.random_seed)
-            model.fit(X=X_train, y=Y_train)
-        elif config.method =='NB':
-            print("Bernouli Naive Bayes")
-            model =  BernoulliNB(alpha=1.0)
-            model.fit(X=X_train, y=Y_train)
-        elif config.method =='KN':
-            print("K-Nearest neighbors")
-            model =  KNeighborsClassifier(n_neighbors=8, leaf_size=10)
-            model.fit(X=X_train, y=Y_train)
-        else:
-            raise ValueError("Unknown method")
-
-        if config.method in ['RF', 'SVM', 'LR', 'TREE', 'NB', 'KN']:
-            try:
-                train_prob = model.predict_proba(X_train)[:,1]
-                test_prob = model.predict_proba(X_test)[:,1]    
-                np.save(file=f"{out_folder}/train.npy", arr=train_prob, allow_pickle=True, fix_imports=True)
-                np.save(file=f"{out_folder}/test.npy", arr=test_prob, allow_pickle=True, fix_imports=True)            
-            except:
-                print("Cannot export the prediction prob")
-            test_pred = model.predict(X_test)
-            
-
-        dataset_pred_binary[test_set_indices] = test_pred
-        AVERAGE_USED = 'macro'
-        test_accuracy = accuracy_score(1-Y_test, 1-test_pred)
-        test_precision = precision_score(1-Y_test, 1-test_pred, average=AVERAGE_USED)
-        test_recall = recall_score(1-Y_test, 1-test_pred, average=AVERAGE_USED)
-        test_f1_score = f1_score(1-Y_test,1-test_pred, average=AVERAGE_USED)
+    if config.method  =="CNN":
+        train_val_tokens = youtube_big_subtitle.loc[train_val_set_indices, 'subtitle'].values
+        print(youtube_big_subtitle.head())
+        print(train_val_tokens[0:])
         
-        print(' Fold k test Accuracy: %.3f' % (test_accuracy))
-        print(' Fold k test Precision: %.3f' % (test_precision))
-        print(' Fold k test Recall: %.3f' % (test_recall))
-        print(' Fold k test F1-Score: %.3f' % (test_f1_score))
+        test_tokens = youtube_big_subtitle.loc[test_set_indices, 'subtitle'].values.tolist()
+        # train test
+        Y_train_val = np.take(target, indices=train_val_set_indices, axis=0)
+        Y_test = np.take(target, indices=test_set_indices, axis=0)
 
-    print("\033[92mFininsh Training")
+        # train - val
+        indices_train, indices_val = stratified_train_val_split(set_labels=Y_train, val_size=0.2)
+        # Get Y_train and Y_val
+        train_tokens = np.take(train_val_tokens, indices=indices_train, axis=0).tolist()
+        Y_train = np.take(Y_train_val, indices=indices_train, axis=0).tolist()
+        val_tokens = np.take(train_val_tokens, indices=indices_val, axis=0).tolist()
+        Y_val = np.take(Y_train_val, indices=indices_val, axis=0).tolist()
+        print(train_tokens[:3])
+        print(Y_train[:3])
+        model = CNN_model(train_tokens)
+        early_stopper = EarlyStopping(mode='auto', verbose=2, monitor='val_loss', restore_best_weights=True, patience=10)
+        model.fit(train_tokens, Y_train, 
+                    batch_size=config.batch_size, 
+                    validation_data=(val_tokens, Y_val), 
+                    epochs=50,
+                    callbacks=[early_stopper])
+
+        train_prob = model.predict(train_val_tokens.tolist()).flatten()
+        test_prob = model.predict(test_tokens).flatten()
+        np.save(file=f"{out_folder}/train.npy", arr=train_prob, allow_pickle=True, fix_imports=True)
+        np.save(file=f"{out_folder}/test.npy", arr=test_prob, allow_pickle=True, fix_imports=True)  
+
+        test_pred = (test_prob > 0.5).astype(np.int)
+        del model
+
+    elif config.method =='RF':
+        print("Random Forest model")
+        model = RandomForestClassifier(n_estimators=100, verbose=1)
+        model.fit(X=X_train, y=Y_train)
+    elif config.method =='SVM':    
+        model = SVC(kernel='rbf', cache_size=2000, probability=True)
+        model.fit(X=X_train, y=Y_train)
+    elif config.method =='LR':
+        print("Logistic Regressinon")
+        model =  LogisticRegression(random_state=config.random_seed, fit_intercept=False)
+        model.fit(X=X_train, y=Y_train)
+    elif config.method =='TREE':
+        print("Decision Tree")
+        model =  DecisionTreeClassifier(random_state=config.random_seed)
+        model.fit(X=X_train, y=Y_train)
+    elif config.method =='NB':
+        print("Bernouli Naive Bayes")
+        model =  BernoulliNB(alpha=1.0)
+        model.fit(X=X_train, y=Y_train)
+    elif config.method =='KN':
+        print("K-Nearest neighbors")
+        model =  KNeighborsClassifier(n_neighbors=8, leaf_size=10)
+        model.fit(X=X_train, y=Y_train)
+    else:
+        raise ValueError("Unknown method")
+
+    if config.method in ['RF', 'SVM', 'LR', 'TREE', 'NB', 'KN']:
+        try:
+            train_prob = model.predict_proba(X_train)[:,1]
+            test_prob = model.predict_proba(X_test)[:,1]    
+            np.save(file=f"{out_folder}/train.npy", arr=train_prob, allow_pickle=True, fix_imports=True)
+            np.save(file=f"{out_folder}/test.npy", arr=test_prob, allow_pickle=True, fix_imports=True)            
+        except:
+            print("Cannot export the prediction prob")
+        test_pred = model.predict(X_test)
+        
+
     AVERAGE_USED = 'macro'
-    test_accuracy = accuracy_score(1-target, 1-dataset_pred_binary)
-    test_precision = precision_score(1-target, 1-dataset_pred_binary, average=AVERAGE_USED)
-    test_recall = recall_score(1-target, 1-dataset_pred_binary, average=AVERAGE_USED)
-    test_f1_score = f1_score(1-target,1-dataset_pred_binary, average=AVERAGE_USED)
+    test_accuracy = accuracy_score(1-Y_test, 1-test_pred)
+    test_precision = precision_score(1-Y_test, 1-test_pred, average=AVERAGE_USED)
+    test_recall = recall_score(1-Y_test, 1-test_pred, average=AVERAGE_USED)
+    test_f1_score = f1_score(1-Y_test,1-test_pred, average=AVERAGE_USED)
+    
+    print(' Accuracy: %.3f' % (test_accuracy))
+    print(' Precision: %.3f' % (test_precision))
+    print(' Recall: %.3f' % (test_recall))
+    print(' F1-Score: %.3f' % (test_f1_score))
 
-    print('--- TEST Accuracy: {:.3f}'.format(test_accuracy))
-    print('--- TEST Precision: {:.3f}'.format(test_precision))
-    print('--- TEST Recall: {:.3f}'.format(test_recall))
-    print('--- TEST F1-Score: {:.3f}'.format(test_f1_score))
-    print('\033[0m')
+  
 
 if __name__ == '__main__':
     with open('./config/config_word2vec.yaml', 'r') as stream:

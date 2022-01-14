@@ -86,39 +86,48 @@ def main(config):
     context = 5  
     downsampling = 1e-3  
 
-    ### Generate KFOLD embedding
-    with open(youtube_dir + "meta_data/k_fold_channel.json", 'rb') as fp:
-            print("Load K FOLD by CHANNEL")
-            k_fold_channel = pickle.load(fp)
+    f = open(f"{youtube_dir}{config.dataset.lower()}_train_videos.txt", "r")
+    train_video_id = f.readlines()
+    train_video_id = [i.strip() for i in train_video_id]
+    f.close()
+
+    f = open(f"{youtube_dir}{config.dataset.lower()}_test_videos.txt", "r")
+    test_video_id = f.readlines()
+    test_video_id = [i.strip() for i in test_video_id]
+    f.close()
+
+    index_lookup = dict(zip(youtube_big_subtitle.video_id.values, np.arange(len(youtube_big_subtitle))))
+    train_id = [index_lookup[u] for u in train_video_id if u in index_lookup]
+    test_id = [index_lookup[u] for u in test_video_id if u in index_lookup]
+    word2vec_dict = dict()
+    tic = time()
+    print(np.max(train_id))
             
     word2vec_dict = dict()
     tic = time()
-    for i in range(5):
-        print(f"FOLD: {i+1}")
-        word2vec_dict[i] = dict()
-        train_id, test_id = k_fold_channel[i]['train'], k_fold_channel[i]['test']
-        print(np.max(train_id))
-        x_train_all = youtube_big_subtitle.loc[train_id, "Tokens"]
-        x_test_all = youtube_big_subtitle.loc[test_id, "Tokens"]
-        
-        model = word2vec.Word2Vec(x_train_all,
-                            workers=num_workers,
-                            vector_size=num_features,
-                            min_count=min_word_count,
-                            window=context,
-                            sample=downsampling,
-                            sg=1 )
-        
-        train_data_vecs = get_dataset(x_train_all, model, num_features)
-        test_data_vecs =  get_dataset(x_test_all, model, num_features)
-        word2vec_dict[i]['train'] = train_data_vecs
-        word2vec_dict[i]['test'] = test_data_vecs
-        
-        word2vec_dict[i]['train'] = np.nan_to_num(word2vec_dict[i]['train'])
-        word2vec_dict[i]['test'] =  np.nan_to_num(word2vec_dict[i]['test'])
-        eta =  str(timedelta(seconds=int((time()-tic) / (i+1) * (5-i-1)))) 
-        print('============== ETA: {} =============='.format(eta))
-        del model
+  
+   
+    x_train_all = youtube_big_subtitle.loc[train_id, "Tokens"]
+    x_test_all = youtube_big_subtitle.loc[test_id, "Tokens"]
+    
+    model = word2vec.Word2Vec(x_train_all,
+                        workers=num_workers,
+                        vector_size=num_features,
+                        min_count=min_word_count,
+                        window=context,
+                        sample=downsampling,
+                        sg=1 )
+    
+    train_data_vecs = get_dataset(x_train_all, model, num_features)
+    test_data_vecs =  get_dataset(x_test_all, model, num_features)
+    word2vec_dict['train'] = train_data_vecs
+    word2vec_dict['test'] = test_data_vecs
+    
+    word2vec_dict['train'] = np.nan_to_num(word2vec_dict[i]['train'])
+    word2vec_dict['test'] =  np.nan_to_num(word2vec_dict[i]['test'])
+    eta =  str(timedelta(seconds=int((time()-tic) / (i+1) * (5-i-1)))) 
+    print('============== ETA: {} =============='.format(eta))
+    del model
     
     with open(youtube_dir + "transcripts/word2vec_embedding_5fold.json", 'wb') as fp:
         pickle.dump(word2vec_dict, fp)

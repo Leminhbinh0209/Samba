@@ -88,3 +88,4 @@ Follow the README document in ```pretrain``` folder to create subtitles' embeddi
 ```
 $ python train.py
 ```
+Our pre-trained model can be obtained [here](https://drive.google.com/file/d/1TreS_HP6lERjJiTZKQkAhYuXI6s_FT1f/view?usp=sharing)

@@ -1,8 +1,9 @@
 # Samba: Identifying Inappropriate Videos for Young Children on YouTube
 ## Overview of our framework
 <p align="center">
-    <img src="https://i.ibb.co/Dbppg5T/main-architecture.png" width="960" alt="overall pipeline">
+    <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" width="960" alt="overall pipeline">
 <p>
+<!--     <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" alt="main-architecture-v3" border="0"> -->
     
 ## 1. Installation
 - Ubuntu 18.04.5 LTS

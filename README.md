@@ -1,8 +1,8 @@
 # Samba: Identifying Inappropriate Videos for Young Children on YouTube<br>
-31st ACM International Conference on Information & Knowledge Management, Georgia, USA, 2022
+_31st ACM International Conference on Information & Knowledge Management, Georgia, USA, 2022_
 ## Overview of our framework
 <p align="center">
-    <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" width="960" alt="overall pipeline">
+    <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" width="900" alt="overall pipeline">
 <p>
 <!--     <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" alt="main-architecture-v3" border="0"> -->
     

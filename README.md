@@ -1,5 +1,5 @@
 # Samba: Identifying Inappropriate Videos for Young Children on YouTube<br>
-_31st ACM International Conference on Information & Knowledge Management, Georgia, USA, 2022_
+_31st ACM International Conference on Information & Knowledge Management, Georgia, USA, 2022_<br />
 <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/Leminhbinh0209/Samba?style=for-the-badge" height="25"  onmouseover="this.height='60'" onmouseout="this.height='25'" ><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/Leminhbinh0209/Samba?style=for-the-badge" height="25"><img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/Leminhbinh0209/Samba?style=for-the-badge" height="25">
 <br />
 ## Overview of our framework

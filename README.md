@@ -5,9 +5,9 @@
 _31st ACM International Conference on Information & Knowledge Management, Georgia, USA, 2022_
 ## Overview of our framework
 <p align="center">
-    <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" width="900" alt="overall pipeline">
+    <img src="https://i.ibb.co/0hMC5k5/arc-anim.gif" width="900" alt="overall pipeline">
 <p>
-<!--     <img src="https://i.ibb.co/RbXFFKj/main-architecture-v3.png" alt="main-architecture-v3" border="0"> -->
+
     
 ## 1. Installation
 - Ubuntu 18.04.5 LTS
